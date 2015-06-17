@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+
 #define MAX 1000
 int END = 1;
 
@@ -13,9 +15,7 @@ int match(char src[], char pattern[], int start) {
     return pattern[j] == '\0' ? start : -1;
 }
 
-/*
-返回第一次匹配的位置,KMP有更高的效率
-*/
+
 int strIndex(char src[], char pattern[]) {
     for (int i = 0; src[i] != '\0'; i++) {
         if (match(src, pattern, i) != -1) {
@@ -40,10 +40,9 @@ void fillLine(FILE *fp) {
 int main() {
     char pattern[] = "ab*";
     FILE *fp;
-    char ch;
     if ((fp = fopen("content.txt","r")) == NULL) {
         printf("\nCannot open file strike any key exit!");
-        getch();
+        getchar();
         exit(1);
     }
     while(END == 1) {
@@ -55,8 +54,10 @@ int main() {
 
     if (fclose(fp) != 0) {
         printf("\nCannot close file.");
-        getch();
+        getchar();
         exit(1);
     }
     return 0;
 }
+
+// gcc -Wall -std=c99 KMPList.c

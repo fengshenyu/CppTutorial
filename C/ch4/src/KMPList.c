@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int calListItem(char pattern[], int index) {
     int i = index;
@@ -31,8 +32,7 @@ int match(char src[], char pattern[],
     for (; pattern[*patternIndex] != '\0' &&
         src[*srcIndex] == pattern[*patternIndex];
         (*srcIndex)++, (*patternIndex)++) {
-            printf("for patternIndex=%d\n", *patternIndex);
-            printf("for srcIndex=%d\n", *srcIndex);
+          ;
     }
     if (pattern[*patternIndex] == '\0') {
         return -1;
@@ -43,14 +43,12 @@ int match(char src[], char pattern[],
             *patternIndex =
                 *(kmpList + *patternIndex - 1);
         }
-        printf("out patternIndex=%d\n", *patternIndex);
-        printf("out srcIndex=%d\n", *srcIndex);
         return 0;
     }
 }
 
 void search(char src[], char pattern[]) {
-    int patternLen = strlen(pattern);
+    unsigned patternLen = strlen(pattern);
     int* kmpList = (int*) malloc(patternLen * sizeof(int));
     loadListItem(&kmpList, pattern);
     printf("kmplist=");
@@ -61,24 +59,23 @@ void search(char src[], char pattern[]) {
 
     int result = -1;
     for (int srcIndex = 0, patternIndex = 0; src[srcIndex] != '\0';) {
-        printf("before loop srcIndex=%d\n",srcIndex);
         int unMatchPos = match(src, pattern, &srcIndex, &patternIndex,
                 kmpList);
         if (unMatchPos == -1) {
             result = srcIndex;
             break;
         }
-        printf("unMatchPos=%d", unMatchPos);
-        // i = (unMatchPos == 0) ? i + 1 :
-        //     (i + unMatchPos - *(kmpList + unMatchPos));
-        // printf("i=%d\n", i);
     }
-    printf("first match pos is :%d", result - patternLen);
+    printf("first match pos is :%d\n", result - patternLen);
     free(kmpList);
 }
 
-void main() {
-    char src[] = "bbc abcdab abcdabcdabde";
+int main() {
+    char src[] = "abcdabd";
+    // char src[] = "bbc abcdab abcdabcdabde";
     char pattern[] = "abcdabd";
     search(src, pattern);
+    return 0;
 }
+
+gcc -std=c99 -Wall KMPList.c
