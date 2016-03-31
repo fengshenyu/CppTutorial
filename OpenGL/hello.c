@@ -1,4 +1,9 @@
-﻿#include <GL/glut.h>
+﻿/*
+glutReshapeFunc()表示当窗口的大小发生改变时应采取什么操作
+glutKeyboardFunc()和glutMouseFunc()允许把键盘上的一个键或鼠标上的一个按钮与一个函数相关联,当这个键或按钮被 按下或释放时,这个函数就会调用.
+glutMotionFunc()注册了一个函数,当按下鼠标按钮移动鼠标时,这个函数就会调用
+*/
+#include <GL/glut.h>
 #include <stdlib.h>
 
 void display(void)
@@ -33,6 +38,7 @@ int main(int argc, char** argv)
    glutInitWindowPosition (500, 500);//窗口左上角的位置
    glutCreateWindow ("中华人民共和国");//窗口标题
    init ();
+   //每当clut确定一个窗口的内容需要重新显示时,通过glutDisplayFuc()注册的那个函数就会被执行
    glutDisplayFunc(display); 
    glutMainLoop();
    return 0;  
