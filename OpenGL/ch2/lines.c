@@ -40,7 +40,6 @@ void display(void)
    glLineWidth (1.0);
 
 /* in 3rd row, 6 lines, with dash/dot/dash stipple  */
-/* as part of a single connected line strip         */
    glLineStipple (1, 0x1C47);  /*  dash/dot/dash  */
    glBegin (GL_LINE_STRIP);
    for (i = 0; i < 7; i++)
