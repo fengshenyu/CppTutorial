@@ -42,70 +42,96 @@ bool addEnd(Sequence* pSequence, Student stu) {
     return true;
 }
 
-int getFlagIndex(char[] line, int len) {
-    int flagIndex = 0;
-    bool found = false;
-    for (int i = 0; i < len; i++) {
-        if (line[i] == ',') {
-            flagIndex = i;
-            found = true;
-            break;
-        }
+bool add(Sequence* pSequence, Student stu, int index) {
+    if (pSequence->used == TOTAL_SIZE || index < 0 || index > pSequence->used){
+        return false;
     }
-    return found ? flagIndex : -1;
+    int tmpIndex = pSequence->used - 1;
+    Student* p = pSequence->ele;
+    while (tmpIndex >= index) {
+        *(p + tmpIndex + 1) = *(p + tmpIndex);
+        tmpIndex--;
+    }
+    *(p + index) = stu;
+    pSequence->used++;
+    return true;
 }
 
-char* getName(char[] line, int len) {
-    int flagIndex = getFlagIndex(line, len);
-    if (flagIndex == -1) {
-        return -1;
+bool delete(Sequence* pSequence, int index, Student* pStu) {
+    if (index < 0 || index >= pSequence->used) {
+        return false;
     }
+    Student* ele = pSequence->ele;
+    *pStu = *(ele + index);
+    for (int i = index; i <= pSequence->used - 2; i++) {
+        *(ele + i) = *(ele + i + 1);
+    }
+    pSequence->used--;
+    return true;
 }
 
-int getNum(char[] line, int len) {
-    int flagIndex = getFlagIndex(line, len);
-    if (flagIndex == -1) {
-        return -1;
+bool find(Sequence sequence, int index, Student* pStu) {
+    if (index < 0 || index >= sequence.used) {
+        return false;
     }
-    char* pNum = (char*) malloc(sizeof(char) * (flagIndex + i));
-    for (int i = 0; i < flagIndex; i++) {
-        *(pNum + i) = line[i];
-    }
-    *(pNum + flagIndex) = '\0';
-    return atoi(pNum);
+    *pStu = *(sequence.ele + index);
+    return true;
 }
 
-void test1() {
-    char filename[] = "data.txt";
-    FILE *fp; 
-    char line[1024];            
-    if((fp = fopen(filename,"r")) == NULL) { 
-          printf("error!"); 
-          return; 
-    } 
-    while (!feof(fp)) { 
-      fgets(line, 1024, fp); 
-      printf("%s", line); 
-    } 
-    fclose(fp);
+bool modify(Sequence* pSequence, int index, Student stu) {
+    if (index < 0 || index >= pSequence->used) {
+        return false;
+    }
+    *(pSequence->ele + index) = stu;
+    return true;
 }
 void main() {
-   Sequence sequence;
-   init(&sequence);
+    Sequence sequence;
+    init(&sequence);
 
-   Student stu1;
-   stu1.stuNum = 1;
-   stu1.stuName = "name1";
-   Student stu2;
-   stu2.stuNum = 2;
-   stu2.stuName = "name2";
-   Student stu3;
-   stu3.stuNum = 3;
-   stu3.stuName = "name3";
-   addEnd(&sequence, stu1);
-   addEnd(&sequence, stu2);
-   addEnd(&sequence, stu3);
+    Student stu1;
+    stu1.stuNum = 1;
+    stu1.stuName = "name1";
+    Student stu2;
+    stu2.stuNum = 2;
+    stu2.stuName = "name2";
+    Student stu3;
+    stu3.stuNum = 3;
+    stu3.stuName = "name3";
+    addEnd(&sequence, stu1);
+    addEnd(&sequence, stu2);
+    addEnd(&sequence, stu3);
 
-   // print(sequence);
-   test1();
+    Student stu4;
+    stu4.stuNum = 4;
+    stu4.stuName = "name4";
+    add(&sequence, stu4, 0);
+    Student stu5;
+    stu5.stuNum = 5;
+    stu5.stuName = "name5";
+    add(&sequence, stu5, 0);
+    Student stu6;
+    stu6.stuNum = 6;
+    stu6.stuName = "name6";
+    add(&sequence, stu6, 0);
+    print(sequence);
+
+    printf("Start delete\n");
+    Student stuDel;
+    delete(&sequence, 0, &stuDel);
+    print(sequence);
+    printf("Del:num=%d,name=%s\n", stuDel.stuNum, stuDel.stuName);
+
+    printf("Start find\n");
+    Student stuFind;
+    find(sequence, 1, &stuFind);
+    print(sequence);
+    printf("find:num=%d,name=%s\n", stuFind.stuNum, stuFind.stuName);
+
+    printf("Start modify\n");
+    Student stuModify;
+    stuModify.stuNum = 100;
+    stuModify.stuName = "name100";
+    modify(&sequence, 2, stuModify);
+    print(sequence);
 }
