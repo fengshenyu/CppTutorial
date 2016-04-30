@@ -22,7 +22,9 @@ void printData(Student data) {
     pritf("num=%d,name=%s", data.stuNum, data.stuName);
 }
 
-bool add
+bool addHead() {
+    
+}
 bool add(StaticLink staticLink, int index, Student stu) {
     if (index < 0) {
         return false;
