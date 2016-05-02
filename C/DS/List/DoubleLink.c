@@ -48,6 +48,29 @@ bool add(Node* pHead, Student data, int index) {
     }
 }
 
+bool delete(Node* pHead, Student* data, int index) {
+    if (index < 0) {
+        return false;
+    }
+    Node* tmp = pHead->next;
+    int i = 0;
+    while (i < index && tmp != pHead) {
+        tmp = tmp->next;
+        i++;
+    }
+    if (i == index) {
+        if (tmp == pHead) {
+            return false;
+        }
+        *data = *(tmp->data);
+        tmp->next->pre = tmp->pre;
+        tmp->pre->next = tmp->next;
+        return true;
+    } else {
+        return false;
+    }
+}
+
 void printData(Student data) {
     printf("num=%d,name=%s\n", data.stuNum, data.stuName);
 }
@@ -80,5 +103,15 @@ void main() {
     stu4.stuNum = 4;
     stu4.stuName = "name4";
     add(&head, stu4, 3);
+    print(&head);
+    printf("\n");
+
+    printf("Start delete\n");
+    Student stu5;
+    bool result = delete(&head, &stu5, 100);
+    if (result) {
+        printf("delete:");
+        printData(stu5);
+    }
     print(&head);
 }
