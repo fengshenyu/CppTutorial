@@ -1,8 +1,9 @@
 #include <stdio.h>
+#include <malloc.h>
 #define TOTAL_SIZE 100
 #define true 1
 #define false 0
-#define N 8
+#define N 2
 typedef int bool;
 
 

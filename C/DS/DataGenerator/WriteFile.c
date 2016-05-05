@@ -2,7 +2,7 @@
 #define SIZE 50000
 void main(){
     FILE *fp;
-    if((fp=fopen("string.data","w"))==NULL){
+    if((fp = fopen("string.data","w")) == NULL){
         printf("Cannot open file strike any key exit!");
         exit(1);
     }
