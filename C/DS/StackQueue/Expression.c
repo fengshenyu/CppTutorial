@@ -1,48 +1,60 @@
 #include <stdio.h>
-#define ADD -1
-#define SUB -2
-#define MUL -3
-#define DIV -4
-#define LEFT -5
-#define RIGHT -6
+#include <string.h>
+#define true 1
+#define false 0
+typedef int bool;
 
-int getOperator(char operator) {
-    int result;
-    switch(operator) {
+typedef struct {
+    int value;
+    char operator;
+    bool isOperator;
+}ExpressionEle;
+
+bool isOperator(char letter) {
+    switch(letter) {
     case '+':
-        result = ADD;
-        break;
     case '-':
-        result = SUB;
-        break;
     case '*':
-        result = MUL;
-        break;
     case '/':
-        result = DIV;
-        break;
     case '(':
-        result = LEFT;
-        break;
     case ')':
-        result = RIGHT;
-        break;
+        return true;
+    defaule:
+        return false;
     }
-    return result;
 }
 
-void init(int intMid[], char* strMid) {
-    for (int i = 0; *(strMid + i) != '\0'; i++) {
-        char cur = *(strMid + i);
-        if ( cur>= '0' || cur <= '9') {
+int getValue(char* strMid, int* start) {
+    int end = *start;
+    while (!isOperator(strMid[end]) && strMid[end] != '\0') {
+        end++;
+    }
+    int len = end - start + 1;
+    char num[len + 1];
+    strncpy(num, (strMid + start - 1), len);
+    num[len + 1] = '\0';
+    *start = end;
+    return atoi(num);
+}
 
-        } else {
-            intMid[i] = getOperator();
-        }
+void initEle(ExpressionEle* ele, char* strMid, int* start) {
+    if (isOperator(strMid[*start])) {
+        ele->operator = strMid[*start];
+        ele->isOperator = true;
+    } else {
+        ele->value = getValue(strMid, start + 1);
+        ele->isOperator = false;
+    }
+}
+
+void initMid(ExpressionEle mid[], char* strMid) {
+    int i = 0;
+    while (strMid[i] != '\0') {
+        initEle(&(mid[i]), strMid, &i);
     }
 }
 
 void main() {
-    int intMid[100];
+    ExpressionEle mid[100];
     char* strMid = "9+(3-1)*3+10/2";
 }
