@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <malloc.h>
 #define TOTAL_SIZE 100
 #define true 1
 #define false 0
@@ -40,8 +41,7 @@ bool push(Stack* pStack, Student stu) {
     if (pStack->top - pStack->base == TOTAL_SIZE) {
         return false;
     }
-    pStack->top->stuNum = stu.stuNum;
-    pStack->top->stuName = stu.stuName;
+    *(pStack->top) = stu;
     pStack->top++;
     return true;
 }
