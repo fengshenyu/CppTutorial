@@ -1,13 +1,14 @@
 #include <stdio.h>
+
 #define TOTAL_SIZE 5
 #define true 1
 #define false 0
+
 typedef int bool;
 typedef struct StudentStruct{
     int stuNum;
     char* stuName;
 }Student;
-
 typedef struct SequenceQueueStruct {
     Student data[TOTAL_SIZE];
     int front;
@@ -36,6 +37,7 @@ bool delete(Queue* pQueue, Student* stu) {
     pQueue->front = (pQueue->front + 1) % TOTAL_SIZE;
     return true;
 }
+
 void printData(Student data) {
     printf("num=%d,name=%s\n", data.stuNum, data.stuName);
 }
@@ -45,6 +47,7 @@ void print(Queue queue) {
         printData((queue.data)[i]);
     }
 }
+
 void main() {
     Queue queue;
     init(&queue);

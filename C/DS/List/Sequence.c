@@ -3,14 +3,13 @@
 
 #define true 1
 #define false 0
-typedef int bool;
-
 #define TOTAL_SIZE 5000
+
+typedef int bool;
 typedef struct StudentStruct{
     int stuNum;
     char* stuName;
 }Student;
-
 typedef struct {
     Student *ele;
     int used;
@@ -85,7 +84,17 @@ bool modify(Sequence* pSequence, int index, Student stu) {
     *(pSequence->ele + index) = stu;
     return true;
 }
-void main() {
+
+bool addLast(Sequence* pSequence, Student stu) {
+    if (pSequence->used == TOTAL_SIZE){
+        return false;
+    }
+    *(pSequence->ele + pSequence->used) = stu;
+    pSequence->used++;
+    return true;
+}
+
+int main() {
     Sequence sequence;
     init(&sequence);
 
@@ -134,4 +143,17 @@ void main() {
     stuModify.stuName = "name100";
     modify(&sequence, 2, stuModify);
     print(sequence);
+    printf("\n");
+
+    printf("Start add last.\n");
+    Student stu101;
+    stu101.stuNum = 101;
+    stu101.stuName = "name101";
+    addLast(&sequence, stu101);
+    Student stu102;
+    stu102.stuNum = 102;
+    stu102.stuName = "name102";
+    addLast(&sequence, stu102);
+    print(sequence);
+    return 0;
 }

@@ -3,9 +3,9 @@
 
 #define true 1
 #define false 0
-typedef int bool;
-
 #define TOTAL_SIZE 10
+
+typedef int bool;
 typedef struct StudentStruct{
     int stuNum;
     char* stuName;
@@ -21,6 +21,7 @@ void init(StaticLink staticLink) {
     }
     staticLink[TOTAL_SIZE - 1].cur = 0;
 }
+
 void printData(Student data) {
     printf("num=%d,name=%s\n", data.stuNum, data.stuName);
 }
@@ -91,6 +92,7 @@ void print(StaticLink staticLink) {
         i = staticLink[i].cur;
     }
 }
+
 void main() {
     StaticLink staticLink;
     init(staticLink);

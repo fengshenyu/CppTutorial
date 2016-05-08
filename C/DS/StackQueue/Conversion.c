@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <malloc.h>
+
 #define TOTAL_SIZE 100
 #define true 1
 #define false 0
 #define N 2
+
 typedef int bool;
-
-
 typedef struct StackStruct {
     int* base;
     int* top;

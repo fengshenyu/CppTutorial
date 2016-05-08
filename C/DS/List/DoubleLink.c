@@ -82,6 +82,7 @@ void print(Node* head) {
         tmp = tmp->next;
     }
 }
+
 void main() {
     Node head;
     init(&head);

@@ -5,15 +5,14 @@
 
 #define true 1
 #define false 0
-typedef int bool;
-
 #define TOTAL_SIZE 60000
 #define MAX_SIZE 50
+
+typedef int bool;
 typedef struct StudentStruct{
     int stuNum;
     char* stuName;
 }Student;
-
 typedef struct {
     Student *ele;
     int used;

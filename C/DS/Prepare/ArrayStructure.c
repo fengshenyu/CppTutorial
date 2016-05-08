@@ -11,6 +11,7 @@ char* getStuName(char name[], int num) {
 	strcat(name, number);
 	return name;
 }
+
 void main() {
 	Student stuArr[10];
 	for (int i = 0; i < 10; i++) {

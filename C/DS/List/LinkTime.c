@@ -7,6 +7,7 @@
 #define false 0
 typedef int bool;
 #define MAX_SIZE 50
+
 typedef struct StudentStruct{
     int stuNum;
     char* stuName;

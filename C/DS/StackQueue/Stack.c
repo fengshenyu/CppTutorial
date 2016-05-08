@@ -1,14 +1,15 @@
 #include <stdio.h>
 #include <malloc.h>
+
 #define TOTAL_SIZE 100
 #define true 1
 #define false 0
+
 typedef int bool;
 typedef struct StudentStruct{
     int stuNum;
     char* stuName;
 }Student;
-
 typedef struct StackStruct {
     Student* base;
     Student* top;
@@ -36,7 +37,6 @@ void print(Stack* pStack) {
     }
 }
 
-
 bool push(Stack* pStack, Student stu) {
     if (pStack->top - pStack->base == TOTAL_SIZE) {
         return false;
@@ -54,9 +54,24 @@ bool pop(Stack* pStack, Student* stu) {
     *stu = *(pStack->top);
     return true;
 }
-void main() {
+
+bool getTop(Stack* pStack, Student* stu) {
+    if (pStack->base == pStack->top) {
+        return false;
+    }
+    Student* top = pStack->top - 1;
+    *stu = *top;
+    return true;
+}
+
+bool isEmpty(Stack* pStack) {
+    return pStack->base == pStack->top;
+}
+
+int main() {
     Stack stack;
     init(&stack);
+    printf("isEmpty=%d\n", isEmpty(&stack));
 
     printf("start push\n");
     Student stu1;
@@ -84,4 +99,13 @@ void main() {
     printf("Pop:");
     printData(stu5);
     print(&stack);
+    printf("\n");
+
+    printf("Get Top:");
+    Student stu6;
+    getTop(&stack, &stu6);
+    printData(stu6);
+    print(&stack);
+    printf("isEmpty=%d\n", isEmpty(&stack));
+    return 0;
 }
