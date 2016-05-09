@@ -89,6 +89,9 @@ void print(Sequence sequence) {
 }
 
 bool removeFirst(Sequence* pSequence, Student* pStu) {
+    if (pSequence->used == 0) {
+        return false;
+    }
     Student* ele = pSequence->ele;
     *pStu = *ele;
     for (int i = 0; i <= pSequence->used - 2; i++) {
@@ -98,6 +101,27 @@ bool removeFirst(Sequence* pSequence, Student* pStu) {
     return true;
 }
 
+void createBinaryTree(Sequence* pSequence, Binary** tree) {
+    Student stu;
+    removeFirst(pSequence, &stu);
+    if (stu.stuNum == -1) {
+        *tree = NULL;
+    } else {
+        *tree = (Binary*)malloc(sizeof(Binary));
+        (*tree)->data = stu;
+        createBinaryTree(pSequence, &((*tree)->lChild));
+        createBinaryTree(pSequence, &((*tree)->rChild));
+    }
+}
+
+void prePrint(Binary* pTree) {
+    if (pTree != NULL) {
+        printf("num=%d,name=%s\n", (pTree->data).stuNum, (pTree->data).stuName);
+        prePrint(pTree->lChild);
+        prePrint(pTree->rChild);
+    }
+}
+
 int main() {
     Sequence sequence;
     initSequence(&sequence);
@@ -105,10 +129,8 @@ int main() {
     print(sequence);
     printf("\n");
 
-    printf("Remove first\n");
-    Student stu;
-    removeFirst(&sequence, &stu);
-    printf("Remove,num=%d,name=%s\n", stu.stuNum, stu.stuName);
-    print(sequence);
+    Binary* tree;
+    createBinaryTree(&sequence, &tree);
+    prePrint(tree);
     return 0;
 }
