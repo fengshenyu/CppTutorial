@@ -22,7 +22,11 @@ typedef struct {
     int used;
     int total;
 }Sequence;
-
+typedef struct StackStruct {
+    Binary* base;
+    Binary* top;
+    int size;
+}Stack;
 void initSequence(Sequence* pSequence) {
     Student* ele = (Student*)malloc(sizeof(Student) * TOTAL_SIZE);
     pSequence->ele = ele;
@@ -122,6 +126,85 @@ void prePrint(Binary* pTree) {
     }
 }
 
+void preOrderPrint(Binary* pTree) {
+    if (pTree != NULL) {
+        printf("num=%d,name=%s\n", (pTree->data).stuNum, (pTree->data).stuName);
+        preOrderPrint(pTree->lChild);
+        preOrderPrint(pTree->rChild);
+    }
+}
+
+void inOrderPrint(Binary* pTree) {
+    if (pTree != NULL) {
+        inOrderPrint(pTree->lChild);
+        printf("num=%d,name=%s\n", (pTree->data).stuNum, (pTree->data).stuName);
+        inOrderPrint(pTree->rChild);
+    }
+}
+
+void postOrderPrint(Binary* pTree) {
+    if (pTree != NULL) {
+        postOrderPrint(pTree->lChild);
+        postOrderPrint(pTree->rChild);
+        printf("num=%d,name=%s\n", (pTree->data).stuNum, (pTree->data).stuName);
+    }
+}
+
+bool push(Stack* pStack, Binary data) {
+    if (pStack->top - pStack->base == TOTAL_SIZE) {
+        return false;
+    }
+    *(pStack->top) = data;
+    pStack->top++;
+    return true;
+}
+
+bool pop(Stack* pStack, Binary* data) {
+    if (pStack->base == pStack->top) {
+        return false;
+    }
+    pStack->top--;
+    *data = *(pStack->top);
+    return true;
+}
+
+void initStack(Stack* pStack) {
+    pStack->base = (Binary*)malloc(sizeof(Binary) * TOTAL_SIZE);
+    pStack->top = pStack->base;
+    pStack->size = TOTAL_SIZE;
+}
+
+bool getTop(Stack* pStack, Binary* data) {
+    if (pStack->base == pStack->top) {
+        return false;
+    }
+    Binary* top = pStack->top - 1;
+    *data = *top;
+    return true;
+}
+
+bool isEmpty(Stack* pStack) {
+    return pStack->base == pStack->top;
+}
+
+void inOrderPrintNoRecursion(Binary* pTree) {
+    Stack stack;
+    initStack(&stack);
+    push(&stack, *pTree);
+    while (!isEmpty(&stack)) {
+        Binary tmp;
+        while (getTop(&stack, &tmp)) {
+            push(&stack, *(tmp.lChild));
+        }
+        pop(&stack, &tmp);
+        if (!isEmpty(&stack)) {
+            pop(&stack, &tmp);
+            printf("num=%d,name=%s\n", tmp.data.stuNum, tmp.data.stuName);
+            push(&stack, *(tmp.rChild));
+        }
+    }
+}
+
 int main() {
     Sequence sequence;
     initSequence(&sequence);
@@ -131,6 +214,13 @@ int main() {
 
     Binary* tree;
     createBinaryTree(&sequence, &tree);
-    prePrint(tree);
+    printf("PreOrder:\n");
+    preOrderPrint(tree);
+    printf("\nInOrder:\n");
+    inOrderPrint(tree);
+    printf("\nPostOrder:\n");
+    postOrderPrint(tree);
+    printf("\ninOrderNoRecursion:\n");
+    inOrderPrintNoRecursion(tree);
     return 0;
 }
