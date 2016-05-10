@@ -23,8 +23,8 @@ typedef struct {
     int total;
 }Sequence;
 typedef struct StackStruct {
-    Binary* base;
-    Binary* top;
+    Binary** base;
+    Binary** top;
     int size;
 }Stack;
 void initSequence(Sequence* pSequence) {
@@ -150,7 +150,7 @@ void postOrderPrint(Binary* pTree) {
     }
 }
 
-bool push(Stack* pStack, Binary data) {
+bool push(Stack* pStack, Binary* data) {
     if (pStack->top - pStack->base == TOTAL_SIZE) {
         return false;
     }
@@ -159,7 +159,7 @@ bool push(Stack* pStack, Binary data) {
     return true;
 }
 
-bool pop(Stack* pStack, Binary* data) {
+bool pop(Stack* pStack, Binary** data) {
     if (pStack->base == pStack->top) {
         return false;
     }
@@ -169,16 +169,16 @@ bool pop(Stack* pStack, Binary* data) {
 }
 
 void initStack(Stack* pStack) {
-    pStack->base = (Binary*)malloc(sizeof(Binary) * TOTAL_SIZE);
+    pStack->base = (Binary**)malloc(sizeof(Binary*) * TOTAL_SIZE);
     pStack->top = pStack->base;
     pStack->size = TOTAL_SIZE;
 }
 
-bool getTop(Stack* pStack, Binary* data) {
+bool getTop(Stack* pStack, Binary** data) {
     if (pStack->base == pStack->top) {
         return false;
     }
-    Binary* top = pStack->top - 1;
+    Binary** top = pStack->top - 1;
     *data = *top;
     return true;
 }
@@ -190,17 +190,17 @@ bool isEmpty(Stack* pStack) {
 void inOrderPrintNoRecursion(Binary* pTree) {
     Stack stack;
     initStack(&stack);
-    push(&stack, *pTree);
+    push(&stack, pTree);
     while (!isEmpty(&stack)) {
-        Binary tmp;
-        while (getTop(&stack, &tmp)) {
-            push(&stack, *(tmp.lChild));
+        Binary* tmp;
+        while (getTop(&stack, &tmp) && (tmp != NULL)) {
+            push(&stack, tmp->lChild);
         }
         pop(&stack, &tmp);
         if (!isEmpty(&stack)) {
             pop(&stack, &tmp);
-            printf("num=%d,name=%s\n", tmp.data.stuNum, tmp.data.stuName);
-            push(&stack, *(tmp.rChild));
+            printf("num=%d,name=%s\n", (tmp->data).stuNum, (tmp->data).stuName);
+            push(&stack, tmp->lChild);
         }
     }
 }
