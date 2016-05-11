@@ -27,6 +27,7 @@ typedef struct StackStruct {
     Binary** top;
     int size;
 }Stack;
+
 void initSequence(Sequence* pSequence) {
     Student* ele = (Student*)malloc(sizeof(Student) * TOTAL_SIZE);
     pSequence->ele = ele;
@@ -200,7 +201,23 @@ void inOrderPrintNoRecursion(Binary* pTree) {
         if (!isEmpty(&stack)) {
             pop(&stack, &tmp);
             printf("num=%d,name=%s\n", (tmp->data).stuNum, (tmp->data).stuName);
-            push(&stack, tmp->lChild);
+            push(&stack, tmp->rChild);
+        }
+    }
+}
+
+void inOrderPrintNoRecursion1(Binary* pTree) {
+    Stack stack;
+    initStack(&stack);
+    Binary* tmp = pTree;
+    while (tmp != NULL || !isEmpty(&stack)) {
+        if (tmp != NULL) {
+            push(&stack, tmp);
+            tmp = tmp->lChild;
+        } else {
+            pop(&stack, &tmp);
+            printf("num=%d,name=%s\n", (tmp->data).stuNum, (tmp->data).stuName);
+            tmp = tmp->rChild;
         }
     }
 }
@@ -222,5 +239,8 @@ int main() {
     postOrderPrint(tree);
     printf("\ninOrderNoRecursion:\n");
     inOrderPrintNoRecursion(tree);
+
+    printf("\ninOrderNoRecursion1:\n");
+    inOrderPrintNoRecursion1(tree);
     return 0;
 }

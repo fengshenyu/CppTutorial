@@ -234,6 +234,7 @@ int getCalcValue(int a, int b, char operator) {
     }
     return result;
 }
+
 int calculate(Sequence* post) {
     Stack stack;
     initStack(&stack);
@@ -256,6 +257,7 @@ int calculate(Sequence* post) {
     pop(&stack, &finalResult);
     return finalResult.value;
 }
+
 int main() {
     char* strMid = "9+(3-1)*3+10/2+1000*10";
     Sequence mid;
