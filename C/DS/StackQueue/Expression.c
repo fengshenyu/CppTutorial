@@ -174,12 +174,8 @@ void porcessOperator(Sequence* mid, Sequence* post,
     }
     ExpressionEle topEle;
     bool getSuccess = getTop(pStack, &topEle);
-    if (!getSuccess) {//栈是空的直接进栈
-        push(pStack, *(mid->ele + midIndex));
-        return;
-    }
-    if (!currentLessEqualTop(current, topEle.operator)) {
-        //当前符号大于栈顶元素直接进栈
+    if (!getSuccess || //栈是空的直接进栈或者当前符号大于栈顶元素直接进栈
+            !currentLessEqualTop(current, topEle.operator)) {
         push(pStack, *(mid->ele + midIndex));
         return;
     }
@@ -234,6 +230,7 @@ int getCalcValue(int a, int b, char operator) {
     }
     return result;
 }
+
 int calculate(Sequence* post) {
     Stack stack;
     initStack(&stack);
@@ -256,6 +253,7 @@ int calculate(Sequence* post) {
     pop(&stack, &finalResult);
     return finalResult.value;
 }
+
 int main() {
     char* strMid = "9+(3-1)*3+10/2+1000*10";
     Sequence mid;
