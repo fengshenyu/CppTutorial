@@ -62,7 +62,7 @@ bool addLast(Sequence* pSequence, Student stu) {
 
 void initInput(Sequence* pSequence) {
     char filename[] = 
-        "D:\\src\\CppTutorial\\C\\DS\\Input\\BinaryTree.input"; 
+        "D:\\Github\\CppTutorial\\C\\DS\\Input\\BinaryTree.input"; 
     FILE *fp; 
     if((fp = fopen(filename, "r")) == NULL) { 
           printf("error!"); 
@@ -119,12 +119,68 @@ void createBinaryTree(Sequence* pSequence, ThreadBinary** tree) {
     }
 }
 
+void printData(Student student) {
+    printf("num=%d,name=%s\n", student.stuNum, student.stuName);
+}
+
 void inOrderPrint(ThreadBinary* pTree) {
     if (pTree != NULL) {
         inOrderPrint(pTree->lChild);
-        printf("num=%d,name=%s\n", (pTree->data).stuNum, (pTree->data).stuName);
+        printData(pTree->data);
         inOrderPrint(pTree->rChild);
     }
+}
+
+void inThreading(ThreadBinary* tree, ThreadBinary** pre) {
+    if (tree != NULL) {
+        inThreading(tree->lChild, pre);
+        if ((tree->lChild) == NULL) {
+            tree->lTag = Thread;
+            tree->lChild = *pre;
+        }
+        if (((*pre)->rChild) == NULL) {
+            (*pre)->rTag = Thread;
+            (*pre)->rChild = tree;
+        }
+        *pre = tree;
+        inThreading(tree->lChild, pre);
+    }
+}
+
+void inOrderThreadingPrint(ThreadBinary* head) {
+    ThreadBinary* tmp = head->lChild;
+    while (tmp != head) {
+        while (tmp->lTag == Link) {
+            tmp = tmp->lChild;
+        }
+        printData(tmp->data);
+        while (tmp->rTag == Thread && tmp->rChild != head) {
+            tmp = tmp->rChild;
+            printData(tmp->data);
+        }
+        tmp = tmp->rChild;
+    }
+}
+
+/**
+threadBinary表示头结点地址的地址,头结点的lChild指向二叉树的根结点.rChild指向中序遍历最后一个结点
+*/
+bool inOrderThreading(ThreadBinary** threadBinary, ThreadBinary* tree) {
+    *threadBinary = (ThreadBinary*)malloc(sizeof(ThreadBinary));//头结点
+    (*threadBinary)->lTag  = Link;
+    (*threadBinary)->rTag = Thread;
+    (*threadBinary)->rChild = *threadBinary;
+    if (tree == NULL) {
+        (*threadBinary)->lChild = *threadBinary;
+    } else {
+        (*threadBinary)->lChild = tree;
+        ThreadBinary** pre = threadBinary;
+        inThreading(tree, pre);
+        (*pre)->rTag = Thread;
+        (*pre)->rChild = *threadBinary;
+        (*threadBinary)->rChild = *pre;
+    }
+    return true;
 }
 
 int main() {
@@ -138,5 +194,9 @@ int main() {
     createBinaryTree(&sequence, &tree);
     printf("\nInOrder:\n");
     inOrderPrint(tree);
+
+    printf("Thread binary tree:\n");
+    ThreadBinary* pHead;
+    inOrderThreading(&pHead, tree);
     return 0;
 }
