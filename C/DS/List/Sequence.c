@@ -23,6 +23,13 @@ void init(Sequence* pSequence) {
     pSequence->total = TOTAL_SIZE;
 }
 
+void destroy(Sequence* pSequence) {
+    free(pSequence->ele);
+    pSequence->ele = NULL;
+    pSequence->used = 0;
+    pSequence->total = 0;
+}
+
 void print(Sequence sequence) {
     printf("used=%d,total=%d\n", sequence.used, sequence.total);
     for (int i = 0; i < sequence.used; i++) {
@@ -155,5 +162,7 @@ int main() {
     stu102.stuName = "name102";
     addLast(&sequence, stu102);
     print(sequence);
+
+    destroy(&sequence);
     return 0;
 }
