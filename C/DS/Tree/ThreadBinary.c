@@ -162,11 +162,14 @@ void inOrderThreadingPrint(ThreadBinary* head) {
     }
 }
 
+/**
+threadBinary表示头结点地址的地址,头结点的lChild指向二叉树的根结点.rChild指向中序遍历最后一个结点
+*/
 bool inOrderThreading(ThreadBinary** threadBinary, ThreadBinary* tree) {
-    *threadBinary = (ThreadBinary*)malloc(sizeof(ThreadBinary));
-    (*threadBinary)->lTag  = Thread;
-    (*threadBinary)->rTag = Link;
-    (*threadBinary)->rChild = tree;
+    *threadBinary = (ThreadBinary*)malloc(sizeof(ThreadBinary));//头结点
+    (*threadBinary)->lTag  = Link;
+    (*threadBinary)->rTag = Thread;
+    (*threadBinary)->rChild = *threadBinary;
     if (tree == NULL) {
         (*threadBinary)->lChild = *threadBinary;
     } else {
