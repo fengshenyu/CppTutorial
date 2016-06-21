@@ -143,7 +143,7 @@ void inThreading(ThreadBinary* tree, ThreadBinary** pre) {
             (*pre)->rChild = tree;
         }
         *pre = tree;
-        inThreading(tree->lChild, pre);
+        inThreading(tree->rChild, pre);
     }
 }
 
@@ -163,9 +163,10 @@ void inOrderThreadingPrint(ThreadBinary* head) {
 }
 
 /**
-threadBinary表示头结点地址的地址,头结点的lChild指向二叉树的根结点.rChild指向中序遍历最后一个结点
+threadBinary表示头结点地址的地址,头结点的lChild指向二叉树的根结点.rChild指向中序遍
+历最后一个结点
 */
-bool inOrderThreading(ThreadBinary** threadBinary, ThreadBinary* tree) {
+void inOrderThreading(ThreadBinary** threadBinary, ThreadBinary* tree) {
     *threadBinary = (ThreadBinary*)malloc(sizeof(ThreadBinary));//头结点
     (*threadBinary)->lTag  = Link;
     (*threadBinary)->rTag = Thread;
@@ -176,11 +177,10 @@ bool inOrderThreading(ThreadBinary** threadBinary, ThreadBinary* tree) {
         (*threadBinary)->lChild = tree;
         ThreadBinary** pre = threadBinary;
         inThreading(tree, pre);
-        (*pre)->rTag = Thread;
         (*pre)->rChild = *threadBinary;
+        (*pre)->rTag = Thread;
         (*threadBinary)->rChild = *pre;
     }
-    return true;
 }
 
 int main() {
@@ -198,5 +198,6 @@ int main() {
     printf("Thread binary tree:\n");
     ThreadBinary* pHead;
     inOrderThreading(&pHead, tree);
+    inOrderThreadingPrint(pHead);
     return 0;
 }
