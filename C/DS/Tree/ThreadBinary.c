@@ -62,7 +62,7 @@ bool addLast(Sequence* pSequence, Student stu) {
 
 void initInput(Sequence* pSequence) {
     char filename[] = 
-        "D:\\Github\\CppTutorial\\C\\DS\\Input\\BinaryTree.input"; 
+        "D:\\Github\\CppTutorial\\C\\DS\\Input\\BinaryTreeSimple.data"; 
     FILE *fp; 
     if((fp = fopen(filename, "r")) == NULL) { 
           printf("error!"); 
@@ -114,20 +114,40 @@ void createBinaryTree(Sequence* pSequence, ThreadBinary** tree) {
     } else {
         *tree = (ThreadBinary*)malloc(sizeof(ThreadBinary));
         (*tree)->data = stu;
+        (*tree)->lTag = Link;
+        (*tree)->rTag = Link;
         createBinaryTree(pSequence, &((*tree)->lChild));
         createBinaryTree(pSequence, &((*tree)->rChild));
     }
 }
 
-void printData(Student student) {
-    printf("num=%d,name=%s\n", student.stuNum, student.stuName);
+void printData(ThreadBinary* node) {
+    Student student = node->data;
+    printf("num=%d,name=%s,", student.stuNum, student.stuName);
+    printf("lTag=%s,rTag=%s\n", node->lTag == Thread ? "Thread" : 
+        "Link", node->lTag == Thread ? "Thread" : "Link");
 }
 
 void inOrderPrint(ThreadBinary* pTree) {
     if (pTree != NULL) {
         inOrderPrint(pTree->lChild);
-        printData(pTree->data);
+        printData(pTree);
         inOrderPrint(pTree->rChild);
+    }
+}
+
+void inOrderThreadingPrint(ThreadBinary* head) {
+    ThreadBinary* tmp = head->lChild;
+    while (tmp != head) {
+        while (tmp->lTag == Link) {
+            tmp = tmp->lChild;
+        }
+        printData(tmp);
+        while (tmp->rTag == Thread && tmp->rChild != head) {
+            tmp = tmp->rChild;
+            printData(tmp);
+        }
+        tmp = tmp->rChild;
     }
 }
 
@@ -146,22 +166,6 @@ void inThreading(ThreadBinary* tree, ThreadBinary** pre) {
         inThreading(tree->rChild, pre);
     }
 }
-
-void inOrderThreadingPrint(ThreadBinary* head) {
-    ThreadBinary* tmp = head->lChild;
-    while (tmp != head) {
-        while (tmp->lTag == Link) {
-            tmp = tmp->lChild;
-        }
-        printData(tmp->data);
-        while (tmp->rTag == Thread && tmp->rChild != head) {
-            tmp = tmp->rChild;
-            printData(tmp->data);
-        }
-        tmp = tmp->rChild;
-    }
-}
-
 /**
 threadBinary表示头结点地址的地址,头结点的lChild指向二叉树的根结点.rChild指向中序遍
 历最后一个结点
