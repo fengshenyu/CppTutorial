@@ -62,7 +62,7 @@ bool addLast(Sequence* pSequence, Student stu) {
 
 void initInput(Sequence* pSequence) {
     char filename[] = 
-        "D:\\Github\\CppTutorial\\C\\DS\\Input\\BinaryTree.input"; 
+        "D:\\Github\\CppTutorial\\C\\DS\\Input\\BinaryTreeSimple.data"; 
     FILE *fp; 
     if((fp = fopen(filename, "r")) == NULL) { 
           printf("error!"); 
