@@ -15,6 +15,10 @@ typedef struct {
     int init;
     int total;
 }HuffmanTree;
+typedef struct {
+    int index;
+    int weight;
+}Pair;
 
 void printHuffmanTree(HuffmanTree* pHuffmanTree) {
     for (int i = 0; i < pHuffmanTree->total; i++) {
@@ -40,52 +44,86 @@ void initWeight(HuffmanTree* pHuffmanTree, int weightArr[]) {
         (pHuffmanTree->pHuffmanNode + i)->lChild = 0;
         (pHuffmanTree->pHuffmanNode + i)->rChild = 0;
     }
+    // printHuffmanTree(pHuffmanTree);
 }
 
-void initMinIndex(HuffmanTree* pHuffmanTree, int minIndex[], int index) {
+void initMinIndex(HuffmanTree* pHuffmanTree, Pair indexWeight[], int index) {
     int count = 0;
     for (int i = 0; i < index; i++) {
         HuffmanNode* p = pHuffmanTree->pHuffmanNode + i;
-        if (p->parent == 0) {
-            minIndex[count++] = i;
+        if (p->parent != 0) {
+            continue;
         }
-        if (count == 2) {
+        if (count == 0) {
+            indexWeight[0].index = i;
+            indexWeight[0].weight = p->weight;
+            count = 1;
+        } else {
+            if (p->weight < indexWeight[0].weight) {
+                indexWeight[1].index = indexWeight[0].index;
+                indexWeight[1].weight = indexWeight[0].weight;
+                indexWeight[0].index = i;
+                indexWeight[0].weight = p->weight;
+            } else {
+                indexWeight[1].index = i;
+                indexWeight[1].weight = p->weight;
+            }
             break;
         }
+        
     }
 }
 
-void updateMin(HuffmanTree* pHuffmanTree, int minIndex[], int index) {
-    initMinIndex(pHuffmanTree, minIndex, index);
-    for (int i = minIndex[1] + 1; i < index; i++) {
-        HuffmanNode* p = pHuffmanTree->pHuffmanNode + i;
-        if (p->parent == 0) {
-            if (p->weight < (p + minIndex[0])->weight) {
-                minIndex[0] = i;
-                continue;
-            }
-            if (p->weight < (p + minIndex[1])->weight) {
-                minIndex[1] = i;
+void updateMin(HuffmanTree* pHuffmanTree, Pair indexWeight[], int index) {
+    initMinIndex(pHuffmanTree, indexWeight, index);
+    // printf("Init:index0=%d,weight0=%d,index1=%d,weight1=%d\n", 
+        // indexWeight[0].index, indexWeight[0].weight,
+        // indexWeight[1].index, indexWeight[1].weight);
+    int i = indexWeight[0].index > indexWeight[1].index ? indexWeight[0].index :
+            indexWeight[1].index;
+    for (i = i + 1; i < index; i++) {
+        HuffmanNode* pStart = pHuffmanTree->pHuffmanNode;
+        HuffmanNode* pIndex = pStart + i;
+        if (pIndex->parent != 0) {
+            continue;
+        }
+        if (pIndex->weight < (pStart + indexWeight[1].index)->weight) { 
+            if (pIndex->weight > (pStart + indexWeight[0].index)->weight) {
+                indexWeight[1].index = i;
+                indexWeight[1].weight = pIndex->weight;
+            } else {
+                indexWeight[1].index = indexWeight[0].index;
+                indexWeight[1].weight = indexWeight[0].weight;
+                indexWeight[0].index = i;
+                indexWeight[0].weight = pIndex->weight;
             }
         }
+        // if (i == 6) {
+        //     printf("Min:index0=%d,weight0=%d,index1=%d,weight1=%d\n", 
+        //     indexWeight[0].index, indexWeight[0].weight,
+        //     indexWeight[1].index, indexWeight[1].weight);
+        // }
     }
+    // printf("Min:index0=%d,weight0=%d,index1=%d,weight1=%d\n", 
+    //     indexWeight[0].index, indexWeight[0].weight,
+    //     indexWeight[1].index, indexWeight[1].weight);
 }
 
 void createHuffmanTree(HuffmanTree* pHuffmanTree) {
     for (int i = pHuffmanTree->init; 
             i < pHuffmanTree->total; i++) {
-        int minIndex[2];
-        updateMin(pHuffmanTree, minIndex, i);
+        Pair indexWeight[2];
+        updateMin(pHuffmanTree, indexWeight, i);
         HuffmanNode* p = pHuffmanTree->pHuffmanNode;
-        (p + minIndex[0])->parent = i;
-        (p + minIndex[1])->parent = i;
-        (p + i)->lChild = minIndex[0];
-        (p + i)->rChild = minIndex[1];
-        (p + i)->weight = (p + minIndex[0])->weight +
-            (p + minIndex[1])->weight;
-        if (i == pHuffmanTree->init) {
+        (p + indexWeight[0].index)->parent = i;
+        (p + indexWeight[1].index)->parent = i;
+        (p + i)->lChild = indexWeight[0].index;
+        (p + i)->rChild = indexWeight[1].index;
+        (p + i)->weight = (p + indexWeight[0].index)->weight +
+            (p + indexWeight[1].index)->weight;
+        if (i == pHuffmanTree->init + 6) {
             printHuffmanTree(pHuffmanTree);
-            printf("min1=%d,min2=%d\n", minIndex[0], minIndex[1]);
+            printf("min1=%d,min2=%d\n", indexWeight[0].index, indexWeight[1].index);
         }
     }
 }
