@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <malloc.h>
-#include <limits.h>
 
 #define true 1
 #define false 0
@@ -44,7 +43,6 @@ void initWeight(HuffmanTree* pHuffmanTree, int weightArr[]) {
         (pHuffmanTree->pHuffmanNode + i)->lChild = 0;
         (pHuffmanTree->pHuffmanNode + i)->rChild = 0;
     }
-    // printHuffmanTree(pHuffmanTree);
 }
 
 void initMinIndex(HuffmanTree* pHuffmanTree, Pair indexWeight[], int index) {
@@ -76,9 +74,6 @@ void initMinIndex(HuffmanTree* pHuffmanTree, Pair indexWeight[], int index) {
 
 void updateMin(HuffmanTree* pHuffmanTree, Pair indexWeight[], int index) {
     initMinIndex(pHuffmanTree, indexWeight, index);
-    // printf("Init:index0=%d,weight0=%d,index1=%d,weight1=%d\n", 
-        // indexWeight[0].index, indexWeight[0].weight,
-        // indexWeight[1].index, indexWeight[1].weight);
     int i = indexWeight[0].index > indexWeight[1].index ? indexWeight[0].index :
             indexWeight[1].index;
     for (i = i + 1; i < index; i++) {
@@ -98,15 +93,7 @@ void updateMin(HuffmanTree* pHuffmanTree, Pair indexWeight[], int index) {
                 indexWeight[0].weight = pIndex->weight;
             }
         }
-        // if (i == 6) {
-        //     printf("Min:index0=%d,weight0=%d,index1=%d,weight1=%d\n", 
-        //     indexWeight[0].index, indexWeight[0].weight,
-        //     indexWeight[1].index, indexWeight[1].weight);
-        // }
     }
-    // printf("Min:index0=%d,weight0=%d,index1=%d,weight1=%d\n", 
-    //     indexWeight[0].index, indexWeight[0].weight,
-    //     indexWeight[1].index, indexWeight[1].weight);
 }
 
 void createHuffmanTree(HuffmanTree* pHuffmanTree) {
@@ -121,10 +108,6 @@ void createHuffmanTree(HuffmanTree* pHuffmanTree) {
         (p + i)->rChild = indexWeight[1].index;
         (p + i)->weight = (p + indexWeight[0].index)->weight +
             (p + indexWeight[1].index)->weight;
-        if (i == pHuffmanTree->init + 6) {
-            printHuffmanTree(pHuffmanTree);
-            printf("min1=%d,min2=%d\n", indexWeight[0].index, indexWeight[1].index);
-        }
     }
 }
 
@@ -134,6 +117,6 @@ int main() {
     initHuffmanTree(&huffmanTree, weightArr);
     initWeight(&huffmanTree, weightArr);
     createHuffmanTree(&huffmanTree);
-    // printHuffmanTree(&huffmanTree);
+    printHuffmanTree(&huffmanTree);
     return 0;
 }
