@@ -52,7 +52,7 @@ void initData(Student* stu, char* line, char* delim) {
 }
 
 bool addLast(Sequence* pSequence, Student stu) {
-    if (pSequence->used == TOTAL_SIZE){
+    if (pSequence->used == TOTAL_SIZE) {
         return false;
     }
     *(pSequence->ele + pSequence->used) = stu;
