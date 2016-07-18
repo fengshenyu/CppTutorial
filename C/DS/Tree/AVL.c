@@ -38,7 +38,8 @@ void leftRotate(BalanceBinary** currentRoot) {
 void leftBalance(BalanceBinary** root) {
     BalanceBinary* lChild =  (*root)->lChild;
     switch (lChild->balance) {
-        
+        case LeftHigh:
+            (*root)
     }
 }
 
