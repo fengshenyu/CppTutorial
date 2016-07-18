@@ -4,7 +4,6 @@
 
 #define true 1
 #define false 0
-#define MAX_SIZE 50
 #define LeftHigh 1
 #define EqualHigh 0
 #define RightHigh -1
