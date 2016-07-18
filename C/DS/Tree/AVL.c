@@ -59,8 +59,8 @@ void leftBalance(BalanceBinary** root) {
             rd->balance = EqualHigh;
             leftRotate(&((*root)->lChild));
             rightRotate(root);
-        }
             break;
+        }    
     }
 }
 
