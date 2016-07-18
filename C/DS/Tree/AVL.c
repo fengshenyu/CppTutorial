@@ -39,11 +39,63 @@ void leftBalance(BalanceBinary** root) {
     BalanceBinary* lChild =  (*root)->lChild;
     switch (lChild->balance) {
         case LeftHigh:
-            (*root)
+            (*root)->balance = lChild->balance = EqualHigh;
+            rightRotate(root);
+            break;
+        case RightHigh: {
+            BalanceBinary* rd = lChild->rChild;
+            switch (rd->balance) {
+                case LeftHigh:
+                    (*root)->balance = RightHigh;
+                    lChild->balance = EqualHigh;
+                    break;
+                case EqualHigh:
+                    (*root)->balance = lChild->balance = EqualHigh;
+                    break;
+                case RightHigh:
+                    (*root)->balance = EqualHigh;
+                    lChild->balance = LeftHigh;
+                    break;
+            }
+            rd->balance = EqualHigh;
+            leftRotate(&((*root)->lChild));
+            rightRotate(root);
+            break;
+        }    
     }
 }
 
-void insertAVL(BalanceBinary** root, EleType eleType, bool* taller) {
+void rightBalance(BalanceBinary** root) {
+    BalanceBinary* rChild =  (*root)->rChild;
+    switch (rChild->balance) {
+        case RightHigh:
+            (*root)->balance = rChild->balance = EqualHigh;
+            leftRotate(root);
+            break;
+        case LeftHigh: {
+            BalanceBinary* rd = rChild->lChild;
+            switch (rd->balance) {
+                case RightHigh:
+                    (*root)->balance = LeftHigh;
+                    rChild->balance = EqualHigh;
+                    break;
+                case EqualHigh:
+                    (*root)->balance = rChild->balance = EqualHigh;
+                    break;
+                case LeftHigh:
+                    (*root)->balance = EqualHigh;
+                    rChild->balance = RightHigh;
+                    break;
+            }
+            rd->balance = EqualHigh;
+            rightRotate(&((*root)->rChild));
+            leftRotate(root);
+        }
+            break;
+    }
+}
+
+bool insertAVL(BalanceBinary** root, EleType eleType, bool* taller) {
     if (*root == NULL) {
         *root = (BalanceBinary*)malloc(sizeof(BalanceBinary));
         (*root)->lChild = NULL;
@@ -52,12 +104,12 @@ void insertAVL(BalanceBinary** root, EleType eleType, bool* taller) {
         (*root)->balance = EqualHigh;
         *taller = true;
     } else {
-        if (eleType.data == ((*root)->data).key) {
+        if (eleType.key == ((*root)->data).key) {
             *taller = false;
             return false;
         }
-        if (eleType.data < ((*root)->data).key) {
-            if (!insertAVL((*root)->lChild, eleType, taller)) {
+        if (eleType.key < ((*root)->data).key) {
+            if (!insertAVL(&((*root)->lChild), eleType, taller)) {
                 return false;
             }
             if (*taller) {
@@ -77,7 +129,7 @@ void insertAVL(BalanceBinary** root, EleType eleType, bool* taller) {
                 }
             }
         } else {
-            if (!insertAVL((*root)->rChild, eleType, taller)) {
+            if (!insertAVL(&((*root)->rChild), eleType, taller)) {
                 return false;
             }
             if (*taller) {
@@ -101,6 +153,38 @@ void insertAVL(BalanceBinary** root, EleType eleType, bool* taller) {
     return true;
 }
 
-int main() {
+void inPrint(BalanceBinary* pTree) {
+    if (pTree != NULL) {
+        inPrint(pTree->lChild);
+        printf("key=%d,name=%s\n", (pTree->data).key, (pTree->data).name);
+        inPrint(pTree->rChild);
+    }
+}
 
+int main() {
+    BalanceBinary* root = NULL;
+    bool taller;
+
+    EleType data0;
+    data0.key = 10;
+    data0.name = "name10";
+    EleType data1;
+    data1.key = 11;
+    data1.name = "name11";
+    EleType data2;
+    data2.key = 5;
+    data2.name = "name5";
+    EleType data3;
+    data3.key = 8;
+    data3.name = "name8";
+    EleType data4;
+    data4.key = 7;
+    data4.name = "name7";
+    insertAVL(&root, data0, &taller);
+    insertAVL(&root, data1, &taller);
+    insertAVL(&root, data2, &taller);
+    insertAVL(&root, data3, &taller);
+    insertAVL(&root, data4, &taller);
+    inPrint(root);
+    return true;
 }
