@@ -2,3 +2,5 @@
 *.obj
 *.out
 *.data
+*.txt
+.idea/

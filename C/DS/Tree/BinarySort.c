@@ -17,6 +17,13 @@ typedef struct BinarySortStruct{
     struct BinarySortStruct* rChild;
 }BinarySort;
 
+/*
+ * BinarySort* pCurrentRoot 当前结点
+ * int key主键
+ * BinarySort* pParent 当前结点的父结点
+ * BinarySort** ppResult 当前结点为空或者当前结点的key和主键相等.把父结点赋值结ppResult
+ *
+ */
 bool searchBinarySort(BinarySort* pCurrentRoot, int key, 
     BinarySort* pParent, BinarySort** ppResult) {
     if (pCurrentRoot == NULL) {
