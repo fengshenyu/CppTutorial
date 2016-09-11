@@ -18,8 +18,8 @@ typedef struct  {
 }Record;
 typedef struct NodeStruct {
     int key;
-    struct BNodeStruct* pSub;
-    Record* recptr;
+    struct BNodeStruct* pSub;//子树指针
+    Record* recptr; //Record指针
 }Node;
 typedef struct BNodeStruct {
     int keyNum;
@@ -71,6 +71,13 @@ Result searchBTree(BNode* pBTree, int k) {
     return result;
 }
 
+/**
+ *
+ * @param ppQ 要添加到哪个结点
+ * @param i 要添加到第i和i+1之间的位置
+ * @param pRecord 要添加的内容
+ * @param pAp
+ */
 void insert(BNode** ppQ, int i, Record* pRecord, BNode* pAp) {
     int j;
     for (j = (*ppQ)->keyNum; j > i; j--) {
@@ -79,17 +86,48 @@ void insert(BNode** ppQ, int i, Record* pRecord, BNode* pAp) {
     (*ppQ)->node[i + 1].key = pRecord->key;
     (*ppQ)->node[i + 1].pSub = pAp;
     (*ppQ)->node[i + 1].recptr = pRecord;
+    (*ppQ)->keyNum++;
 }
 
-void insertBTree(BNode** ppBTree,
-                 Record* record, BNode* pQ, int i) {
-    BNode* pAp = NULL;
+/**
+ * 将结点q分裂成两个结点,前一半保留,后一半移入新的结点ap
+ * @param q
+ * @param ap
+ */
+void split(BNode** q, BNode** ap) {
+    int i, s = (m + 1) / 2;
+    *ap = (BNode*)malloc(sizeof(BNode));
+    (*ap)->node[0].pSub = (*q)->node[s].pSub;
+    for (i = s + 1; i <= m; i++) {
+        (*ap)->node[i - s] = (*q)->node[i];
+        if ((*ap)->node[i - s].pSub) {
+            (*ap)->node[i - s].pSub->pParent = *ap;
+        }
+    }
+    (*ap)->keyNum = m - s;
+    (*ap)->pParent = (*q)->pParent;
+    (*q)->keyNum = s - 1;
+}
+void insertBTree(BNode** T,
+                 Record* r, BNode* q, int i) {
+    BNode* ap = NULL;
     bool finished = false;
     int s;
-    Record* pRx;
-    pRx = record;
-    while (pQ && !finished) {
-
+    Record *rx;
+    rx = r;
+    while (q && !finished) {
+        insert(&q, i, rx, ap);
+        if (q->keyNum < m) {
+            finished = true;
+        } else {
+            s = (m + 1) / 2;
+            rx = q->node[s].recptr;
+            split(&q, &ap);
+            q = q->pParent;
+            if (q) {
+                i = search(q, rx->key);
+            }
+        }
     }
 }
 
@@ -104,6 +142,9 @@ int main() {
     init(&pBTree);
     for (i = 0; i < N; i++) {
         result = searchBTree(pBTree, r[i].key);
+        if (!result.tag) {
+            insertBTree(&pBTree, &r[i], result.current, i);
+        }
     }
 
     return true;
