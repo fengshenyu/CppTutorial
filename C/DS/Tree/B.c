@@ -131,6 +131,22 @@ void insertBTree(BNode** T,
     }
 }
 
+void printBTree(BNode* DT) {
+    int i;
+    if (DT) {
+        if (DT->node[0].pSub) {
+            printBTree(DT->node[0].pSub);
+        }
+        for (i = 1; i <= DT->keyNum; i++) {
+            printf("%d\n", DT->node[i].recptr->key);
+            if (DT->node[i].pSub) {
+                printBTree(DT->node[i].pSub);
+            }
+        }
+    }
+
+}
+
 int main() {
     Record r[N] = {
             {24,"1"},{45,"2"},{53,"3"},{12,"4"},{37,"5"},{50,"6"},{61,"7"},
@@ -146,6 +162,6 @@ int main() {
             insertBTree(&pBTree, &r[i], result.current, i);
         }
     }
-
+    printBTree(pBTree);
     return true;
 }
