@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <malloc.h>
-#include <string.h>
 
 #define true 1
 #define false 0
 #define m 3
 #define MAX 10
-#define N 16
+#define N 4
 
 typedef int bool;
 typedef struct  {
@@ -61,6 +60,7 @@ Result searchBTree(BNode* pBTree, int k) {
             p = (p->node)[i].pSub;
         }
     }
+    result.i = i;
     if (found) {
         result.current = p;
         result.tag = 1;
@@ -108,6 +108,24 @@ void split(BNode** q, BNode** ap) {
     (*ap)->pParent = (*q)->pParent;
     (*q)->keyNum = s - 1;
 }
+
+void newRoot(BNode** T, Record* r, BNode* ap) {
+    BNode* p = (BNode*)malloc(sizeof(BNode));
+    p->node[0].pSub = *T;
+    *T = p;
+    if ((*T)->node[0].pSub) {
+        (*T)->node[0].pSub->pParent = *T;
+    }
+    (*T)->pParent = NULL;
+    (*T)->keyNum = 1;
+    (*T)->node[1].key = r->key;
+    (*T)->node[1].recptr = r;
+    (*T)->node[1].pSub = ap;
+    if ((*T)->node[1].pSub) {
+        (*T)->node[1].pSub->pParent = *T;
+    }
+}
+
 void insertBTree(BNode** T,
                  Record* r, BNode* q, int i) {
     BNode* ap = NULL;
@@ -129,6 +147,9 @@ void insertBTree(BNode** T,
             }
         }
     }
+    if (!finished) {
+        newRoot(T, rx, ap);
+    }
 }
 
 void printBTree(BNode* DT) {
@@ -148,10 +169,12 @@ void printBTree(BNode* DT) {
 }
 
 int main() {
+//    Record r[N] = {
+//            {24,"1"},{45,"2"},{53,"3"},{12,"4"},{37,"5"},{50,"6"},{61,"7"},
+//            {90,"8"}, {100,"9"},{70,"10"},{3,"11"},{30,"12"},{26,"13"},
+//            {85,"14"},{3,"15"}, {7,"16"}};
     Record r[N] = {
-            {24,"1"},{45,"2"},{53,"3"},{12,"4"},{37,"5"},{50,"6"},{61,"7"},
-            {90,"8"}, {100,"9"},{70,"10"},{3,"11"},{30,"12"},{26,"13"},
-            {85,"14"},{3,"15"}, {7,"16"}};
+            {24,"1"}, {45,"2"}, {53,"3"}, {12,"4"}};
     BNode* pBTree;
     Result result;
     int i;
